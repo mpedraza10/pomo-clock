@@ -4,7 +4,7 @@
 // React imports
 import { useEffect, useState, useRef } from "react";
 
-const Timer = ({ currentTimer, minutes }) => {
+const Timer = ({ currentTimer, minutes, setIsDone }) => {
 	// ---------------------------------------------- State ----------------------------------------------
 	const [timeLeft, setTimeLeft] = useState(minutes);
 	const [isActive, setIsActive] = useState(false);
@@ -59,6 +59,7 @@ const Timer = ({ currentTimer, minutes }) => {
 		} else if (timeLeft === 0 && isActive) {
 			playAudio("alarm");
 			handleReset();
+			setIsDone(true);
 		} else {
 			clearInterval(interval);
 		}
