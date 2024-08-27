@@ -2,13 +2,21 @@
 /* eslint-disable react/prop-types */
 
 // React imports
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Timer = ({ currentTimer, minutes }) => {
+	// ---------------------------------------------- State ----------------------------------------------
 	const [timeLeft, setTimeLeft] = useState(minutes);
 	const [isActive, setIsActive] = useState(false);
 
-	// Helper functions
+	// Create a ref for the audio element
+	// Create refs for the audio elements
+	const audioRefs = {
+		alarm: useRef(null),
+		click: useRef(null),
+	};
+
+	// ---------------------------------------------- Helper functions ----------------------------------------------
 
 	// Function to format how the time is displayed in the app
 	const formatTime = (seconds) => {
@@ -25,7 +33,14 @@ const Timer = ({ currentTimer, minutes }) => {
 		setTimeLeft(minutes); // Reset to initial time
 	};
 
-	// Effects
+	// Function to play the audio
+	const playAudio = (sound) => {
+		if (audioRefs[sound].current) {
+			audioRefs[sound].current.play();
+		}
+	};
+
+	// ---------------------------------------------- Effects ----------------------------------------------
 
 	// Effect to reset the timer when minutes prop changes
 	useEffect(() => {
@@ -42,6 +57,7 @@ const Timer = ({ currentTimer, minutes }) => {
 				setTimeLeft((prevTime) => prevTime - 1);
 			}, 1000);
 		} else if (timeLeft === 0 && isActive) {
+			playAudio("alarm");
 			handleReset();
 		} else {
 			clearInterval(interval);
@@ -54,10 +70,25 @@ const Timer = ({ currentTimer, minutes }) => {
 		<div>
 			<h1>{currentTimer}</h1>
 			<span>{formatTime(timeLeft)}</span>
-			<button onClick={() => setIsActive(!isActive)}>
+			<button
+				onClick={() => {
+					playAudio("click");
+					setIsActive(!isActive);
+				}}
+			>
 				{isActive ? "Pause" : "Start"}
 			</button>
-			<button onClick={handleReset}>Reset</button>
+			<button
+				onClick={() => {
+					playAudio("click");
+					handleReset();
+				}}
+			>
+				Reset
+			</button>
+
+			<audio ref={audioRefs.alarm} src="/audio/alarm.mp3" />
+			<audio ref={audioRefs.click} src="/audio/click.mp3" />
 		</div>
 	);
 };
