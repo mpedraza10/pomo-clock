@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 // Components
 import Nav from "./components/nav/nav.component";
 import Timer from "./components/timer/timer.component";
+import MotivationText from "./components/motivation-text/motivation-text.component";
 
 // Default timer settings (min * 60 to turn into seconds)
 const TIMER_SETTINGS = {
-	work: { time: 30 * 60 },
-	sbreak: { time: 5 * 60 },
-	lbreak: { time: 15 * 60 },
+	work: { minutes: 1 },
+	sbreak: { minutes: 1 },
+	lbreak: { minutes: 1 },
 };
 
 const App = () => {
@@ -62,24 +63,25 @@ const App = () => {
 				<Nav currentTimer={currentTimer} setCurrentTimer={setCurrentTimer} />
 				{currentTimer === "work" ? (
 					<Timer
-						minutes={timerSettings.work.time}
+						minutes={timerSettings.work.minutes}
 						currentTimer={currentTimer}
 						setIsDone={setIsDone}
 					/>
 				) : currentTimer === "sbreak" ? (
 					<Timer
-						minutes={timerSettings.sbreak.time}
+						minutes={timerSettings.sbreak.minutes}
 						currentTimer={currentTimer}
 						setIsDone={setIsDone}
 					/>
 				) : (
 					<Timer
-						minutes={timerSettings.lbreak.time}
+						minutes={timerSettings.lbreak.minutes}
 						currentTimer={currentTimer}
 						setIsDone={setIsDone}
 					/>
 				)}
 			</div>
+			<MotivationText workCount={workCount} currentTimer={currentTimer} />
 		</main>
 	);
 };

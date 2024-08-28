@@ -7,8 +7,8 @@ const Controls = ({
 	currentTimer,
 	playAudio,
 	handleReset,
-	isActive,
-	setIsActive,
+	isRunning,
+	setIsRunning,
 }) => {
 	return (
 		<div className="controls-container">
@@ -22,10 +22,10 @@ const Controls = ({
 				}`}
 				onClick={() => {
 					playAudio("click");
-					setIsActive(!isActive);
+					setIsRunning(!isRunning);
 				}}
 			>
-				{isActive ? "PAUSE" : "START"}
+				{isRunning ? "PAUSE" : "START"}
 			</button>
 			<button
 				className={`btn reset-btn ${

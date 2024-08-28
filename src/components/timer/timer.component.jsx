@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 
 // React imports
-import { useEffect, useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Components
 import Controls from "../controls/controls.component";
@@ -10,10 +10,13 @@ import Controls from "../controls/controls.component";
 // Styles
 import "./timer.styles.scss";
 
-const Timer = ({ currentTimer, minutes, setIsDone }) => {
-	// ---------------------------------------------- State ----------------------------------------------
-	const [timeLeft, setTimeLeft] = useState(minutes);
-	const [isActive, setIsActive] = useState(false);
+const Timer = ({ minutes, currentTimer, setIsDone }) => {
+	// Define initial duration of a Pomodoro session (in milliseconds)
+	const pomodoroDuration = minutes * 60 * 1000;
+
+	const [isRunning, setIsRunning] = useState(false);
+	const [startTime, setStartTime] = useState(null); // Track when the timer started
+	const [timeLeft, setTimeLeft] = useState(pomodoroDuration); // Time remaining
 
 	// Create a ref for the audio element
 	// Create refs for the audio elements
@@ -24,19 +27,10 @@ const Timer = ({ currentTimer, minutes, setIsDone }) => {
 
 	// ---------------------------------------------- Helper functions ----------------------------------------------
 
-	// Function to format how the time is displayed in the app
-	const formatTime = (seconds) => {
-		const minutes = Math.floor(seconds / 60);
-		const remainingSeconds = seconds % 60;
-		return `${minutes < 10 ? "0" : ""}${minutes}:${
-			remainingSeconds < 10 ? "0" : ""
-		}${remainingSeconds}`;
-	};
-
 	// Function that resets the timer to default setting
 	const handleReset = () => {
-		setIsActive(false);
-		setTimeLeft(minutes); // Reset to initial time
+		setIsRunning(false);
+		setTimeLeft(pomodoroDuration);
 	};
 
 	// Function to play the audio
@@ -46,52 +40,59 @@ const Timer = ({ currentTimer, minutes, setIsDone }) => {
 		}
 	};
 
-	// ---------------------------------------------- Effects ----------------------------------------------
+	// Function to format how the time is displayed in the app
+	const formatTime = (milliseconds) => {
+		const totalSeconds = Math.floor(milliseconds / 1000);
+		const minutes = Math.floor(totalSeconds / 60);
+		const seconds = totalSeconds % 60;
+		return `${minutes.toString().padStart(2, "0")}:${seconds
+			.toString()
+			.padStart(2, "0")}`;
+	};
 
-	// Effect to reset the timer when minutes prop changes
+	// ---------------------------------------------- Effects ----------------------------------------------
 	useEffect(() => {
-		setTimeLeft(minutes);
-		setIsActive(false);
+		setTimeLeft(pomodoroDuration);
+		setIsRunning(false);
 	}, [minutes]);
 
-	// Effect to handle timer
 	useEffect(() => {
-		let interval = null;
+		let timerId;
 
-		if (isActive && timeLeft > 0) {
-			interval = setInterval(() => {
-				setTimeLeft((prevTime) => prevTime - 1);
-			}, 1000);
-		} else if (timeLeft === 0 && isActive) {
-			playAudio("alarm");
-			handleReset();
-			setIsDone(true);
-		} else {
-			clearInterval(interval);
+		if (isRunning) {
+			// Save the start time if the timer just started
+			const start = Date.now() - (pomodoroDuration - timeLeft);
+			setStartTime(start);
+
+			// Set an interval to update the time left
+			timerId = setInterval(() => {
+				const elapsedTime = Date.now() - start;
+				const remainingTime = pomodoroDuration - elapsedTime;
+				setTimeLeft(Math.max(remainingTime, 0)); // Ensure time doesn't go negative
+
+				if (remainingTime <= 0) {
+					clearInterval(timerId);
+					setIsRunning(false); // Stop the timer when it hits zero
+					playAudio("alarm");
+					setIsDone(true);
+					handleReset();
+				}
+			}, 100); // Update every 100ms for smoothness
 		}
 
-		return () => clearInterval(interval);
-	}, [isActive, timeLeft]);
+		return () => clearInterval(timerId); // Cleanup interval on component unmount or timer stop
+	}, [isRunning, timeLeft]);
 
 	return (
 		<div className="timer-container">
 			<span className="current-time">{formatTime(timeLeft)}</span>
-			<span className="phrase">
-				{currentTimer === "work"
-					? "Time to hustle! Your to-do list isn't going to check itself off!"
-					: currentTimer === "sbreak"
-					? "Quick stretch! It's time to pretend you're doing yoga."
-					: "Long break! Now's your chance to contemplate life… or just snack endlessly."}
-			</span>
-
 			<Controls
 				currentTimer={currentTimer}
-				isActive={isActive}
-				setIsActive={setIsActive}
+				isRunning={isRunning}
+				setIsRunning={setIsRunning}
 				playAudio={playAudio}
 				handleReset={handleReset}
 			/>
-
 			<audio ref={audioRefs.alarm} src="/audio/alarm.mp3" />
 			<audio ref={audioRefs.click} src="/audio/click.mp3" />
 		</div>
