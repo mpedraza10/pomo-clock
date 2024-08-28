@@ -1,0 +1,34 @@
+@import "../../utils/styles/variables.scss";
+
+.timer-menu-container {
+	width: 100%;
+
+	.menu-options {
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+
+		.timer-opt {
+			button {
+				font-size: 1.1rem;
+				padding: 0 1rem;
+				font-weight: bold;
+				background-color: transparent;
+				color: #fff;
+
+				&.work-selected {
+					background-color: $selected-red-bg-color;
+				}
+
+				&.sbreak-selected {
+					background-color: $selected-light-blue-bg-color;
+				}
+
+				&.lbreak-selected {
+					background-color: $selected-dark-blue-bg-color;
+				}
+			}
+		}
+	}
+}

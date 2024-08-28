@@ -4,6 +4,12 @@
 // React imports
 import { useEffect, useState, useRef } from "react";
 
+// Components
+import Controls from "../controls/controls.component";
+
+// Styles
+import "./timer.styles.scss";
+
 const Timer = ({ currentTimer, minutes, setIsDone }) => {
 	// ---------------------------------------------- State ----------------------------------------------
 	const [timeLeft, setTimeLeft] = useState(minutes);
@@ -68,25 +74,23 @@ const Timer = ({ currentTimer, minutes, setIsDone }) => {
 	}, [isActive, timeLeft]);
 
 	return (
-		<div>
-			<h1>{currentTimer}</h1>
-			<span>{formatTime(timeLeft)}</span>
-			<button
-				onClick={() => {
-					playAudio("click");
-					setIsActive(!isActive);
-				}}
-			>
-				{isActive ? "Pause" : "Start"}
-			</button>
-			<button
-				onClick={() => {
-					playAudio("click");
-					handleReset();
-				}}
-			>
-				Reset
-			</button>
+		<div className="timer-container">
+			<span className="current-time">{formatTime(timeLeft)}</span>
+			<span className="phrase">
+				{currentTimer === "work"
+					? "Time to hustle! Your to-do list isn't going to check itself off!"
+					: currentTimer === "sbreak"
+					? "Quick stretch! It's time to pretend you're doing yoga."
+					: "Long break! Now's your chance to contemplate life… or just snack endlessly."}
+			</span>
+
+			<Controls
+				currentTimer={currentTimer}
+				isActive={isActive}
+				setIsActive={setIsActive}
+				playAudio={playAudio}
+				handleReset={handleReset}
+			/>
 
 			<audio ref={audioRefs.alarm} src="/audio/alarm.mp3" />
 			<audio ref={audioRefs.click} src="/audio/click.mp3" />

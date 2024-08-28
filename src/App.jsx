@@ -41,27 +41,45 @@ const App = () => {
 	}, [isDone]);
 
 	return (
-		<main>
-			<Nav setCurrentTimer={setCurrentTimer} />
-			{currentTimer === "work" ? (
-				<Timer
-					minutes={timerSettings.work.time}
-					currentTimer={currentTimer}
-					setIsDone={setIsDone}
-				/>
-			) : currentTimer === "sbreak" ? (
-				<Timer
-					minutes={timerSettings.sbreak.time}
-					currentTimer={currentTimer}
-					setIsDone={setIsDone}
-				/>
-			) : (
-				<Timer
-					minutes={timerSettings.lbreak.time}
-					currentTimer={currentTimer}
-					setIsDone={setIsDone}
-				/>
-			)}
+		<main
+			className={`main-container ${
+				currentTimer === "work"
+					? "red-bg"
+					: currentTimer === "sbreak"
+					? "light-blue-bg"
+					: "dark-blue-bg"
+			}`}
+		>
+			<div
+				className={`content-container ${
+					currentTimer === "work"
+						? "red-bg"
+						: currentTimer === "sbreak"
+						? "light-blue-bg"
+						: "dark-blue-bg"
+				}`}
+			>
+				<Nav currentTimer={currentTimer} setCurrentTimer={setCurrentTimer} />
+				{currentTimer === "work" ? (
+					<Timer
+						minutes={timerSettings.work.time}
+						currentTimer={currentTimer}
+						setIsDone={setIsDone}
+					/>
+				) : currentTimer === "sbreak" ? (
+					<Timer
+						minutes={timerSettings.sbreak.time}
+						currentTimer={currentTimer}
+						setIsDone={setIsDone}
+					/>
+				) : (
+					<Timer
+						minutes={timerSettings.lbreak.time}
+						currentTimer={currentTimer}
+						setIsDone={setIsDone}
+					/>
+				)}
+			</div>
 		</main>
 	);
 };
