@@ -1,0 +1,78 @@
+@import "./utils/styles/variables";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+}
+
+ul {
+	list-style: none;
+}
+
+.btn {
+	background-color: #fff;
+	padding: 0.5rem 1rem;
+	border: none;
+	border-radius: 6px;
+	font-size: 1.375rem;
+	cursor: pointer;
+
+	&.red-bg {
+		color: $red-bg-color;
+	}
+
+	&.light-blue-bg {
+		color: $light-blue-bg-color;
+	}
+
+	&.dark-blue-bg {
+		color: $dark-blue-bg-color;
+	}
+}
+
+.main-container {
+	min-height: 100vh;
+	padding: 0 1rem;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	&.red-bg {
+		background-color: $red-bg-color;
+	}
+
+	&.light-blue-bg {
+		background-color: $light-blue-bg-color;
+	}
+
+	&.dark-blue-bg {
+		background-color: $dark-blue-bg-color;
+	}
+
+	.content-container {
+		width: 100%;
+		max-width: 500px;
+		margin: 0 auto;
+		padding: 2rem;
+		border-radius: 10px;
+
+		&.red-bg {
+			background-color: $contrast-red-bg-color;
+		}
+
+		&.light-blue-bg {
+			background-color: $contrast-light-blue-bg-color;
+		}
+
+		&.dark-blue-bg {
+			background-color: $contrast-dark-blue-bg-color;
+		}
+	}
+}

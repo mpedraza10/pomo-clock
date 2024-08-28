@@ -1,0 +1,10 @@
+.controls-container {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+
+	.start-pause-btn,
+	.reset-btn {
+		font-weight: bold;
+	}
+}
