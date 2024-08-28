@@ -8,9 +8,9 @@ import MotivationText from "./components/motivation-text/motivation-text.compone
 
 // Default timer settings (min * 60 to turn into seconds)
 const TIMER_SETTINGS = {
-	work: { minutes: 1 },
-	sbreak: { minutes: 1 },
-	lbreak: { minutes: 1 },
+	work: { minutes: 30 },
+	sbreak: { minutes: 5 },
+	lbreak: { minutes: 15 },
 };
 
 const App = () => {
