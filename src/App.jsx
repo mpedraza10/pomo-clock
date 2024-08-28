@@ -17,7 +17,7 @@ const App = () => {
 	const [timerSettings, setTimerSettings] = useState(TIMER_SETTINGS);
 	const [currentTimer, setCurrentTimer] = useState("work");
 	const [isDone, setIsDone] = useState(false);
-	const [workCount, setWorkCount] = useState(4);
+	const [workCount, setWorkCount] = useState(1);
 
 	// ---------------------------------------------- Effects ----------------------------------------------
 
