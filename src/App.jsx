@@ -1,10 +1,11 @@
 // React imports
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 // Components
 import Nav from "./components/nav/nav.component";
 import Timer from "./components/timer/timer.component";
 import MotivationText from "./components/motivation-text/motivation-text.component";
+import Header from "./components/header/header.component";
 
 // Default timer settings (min * 60 to turn into seconds)
 const TIMER_SETTINGS = {
@@ -42,17 +43,13 @@ const App = () => {
 	}, [isDone]);
 
 	return (
-		<main
-			className={`main-container ${
-				currentTimer === "work"
-					? "red-bg"
-					: currentTimer === "sbreak"
-					? "light-blue-bg"
-					: "dark-blue-bg"
-			}`}
-		>
-			<div
-				className={`content-container ${
+		<Fragment>
+			<Header
+				timerSettings={timerSettings}
+				setTimerSettings={setTimerSettings}
+			/>
+			<main
+				className={`main-container ${
 					currentTimer === "work"
 						? "red-bg"
 						: currentTimer === "sbreak"
@@ -60,29 +57,39 @@ const App = () => {
 						: "dark-blue-bg"
 				}`}
 			>
-				<Nav currentTimer={currentTimer} setCurrentTimer={setCurrentTimer} />
-				{currentTimer === "work" ? (
-					<Timer
-						minutes={timerSettings.work.minutes}
-						currentTimer={currentTimer}
-						setIsDone={setIsDone}
-					/>
-				) : currentTimer === "sbreak" ? (
-					<Timer
-						minutes={timerSettings.sbreak.minutes}
-						currentTimer={currentTimer}
-						setIsDone={setIsDone}
-					/>
-				) : (
-					<Timer
-						minutes={timerSettings.lbreak.minutes}
-						currentTimer={currentTimer}
-						setIsDone={setIsDone}
-					/>
-				)}
-			</div>
-			<MotivationText workCount={workCount} currentTimer={currentTimer} />
-		</main>
+				<div
+					className={`content-container ${
+						currentTimer === "work"
+							? "red-bg"
+							: currentTimer === "sbreak"
+							? "light-blue-bg"
+							: "dark-blue-bg"
+					}`}
+				>
+					<Nav currentTimer={currentTimer} setCurrentTimer={setCurrentTimer} />
+					{currentTimer === "work" ? (
+						<Timer
+							minutes={timerSettings.work.minutes}
+							currentTimer={currentTimer}
+							setIsDone={setIsDone}
+						/>
+					) : currentTimer === "sbreak" ? (
+						<Timer
+							minutes={timerSettings.sbreak.minutes}
+							currentTimer={currentTimer}
+							setIsDone={setIsDone}
+						/>
+					) : (
+						<Timer
+							minutes={timerSettings.lbreak.minutes}
+							currentTimer={currentTimer}
+							setIsDone={setIsDone}
+						/>
+					)}
+				</div>
+				<MotivationText workCount={workCount} currentTimer={currentTimer} />
+			</main>
+		</Fragment>
 	);
 };
 
