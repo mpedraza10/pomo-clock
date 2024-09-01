@@ -11,8 +11,13 @@ const AppSettings = ({ closeModal, timerSettings, setTimerSettings }) => {
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 
-		let validatedValue = +value;
-		if (validatedValue > 99) {
+		// Convert value to a number, which automatically removes leading zeros
+		let validatedValue = parseInt(value, 10);
+
+		// Handle the case where value is not a number (e.g., empty input)
+		if (isNaN(validatedValue)) {
+			validatedValue = "";
+		} else if (validatedValue > 99) {
 			validatedValue = 99;
 		}
 
