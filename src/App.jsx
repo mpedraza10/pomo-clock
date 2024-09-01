@@ -44,7 +44,10 @@ const App = () => {
 
 	return (
 		<Fragment>
-			<Header />
+			<Header
+				timerSettings={timerSettings}
+				setTimerSettings={setTimerSettings}
+			/>
 			<main
 				className={`main-container ${
 					currentTimer === "work"

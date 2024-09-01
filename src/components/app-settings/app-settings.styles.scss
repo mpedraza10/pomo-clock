@@ -1,0 +1,59 @@
+.settings-title-container {
+	width: 100%;
+	text-align: center;
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid grey;
+	margin-bottom: 1rem;
+	color: grey;
+}
+
+.setting-section {
+	padding: 0 1rem;
+
+	.setting-section-title,
+	.setting-section-description {
+		color: grey;
+	}
+
+	.setting-section-title {
+		margin-bottom: 0.5rem;
+	}
+
+	.timer-settings {
+		margin: 1rem 0;
+
+		.timer-setting {
+			.timer-setting-title {
+				display: block;
+				color: grey;
+				font-weight: bold;
+			}
+
+			.timer-setting-input {
+				border-radius: 6px;
+				background-color: rgb(239, 239, 239);
+				font-size: 16px;
+				padding: 10px;
+				box-shadow: none;
+				border: none;
+				color: rgb(85, 85, 85);
+				width: 100%;
+			}
+		}
+	}
+
+	.save-settings-btn {
+		font-size: 1.1rem;
+		background-color: #3a3a3a;
+		color: #fff;
+		float: right;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.timer-settings {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		column-gap: 1rem;
+	}
+}

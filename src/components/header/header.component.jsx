@@ -1,14 +1,30 @@
+/* eslint-disable react/prop-types */
+
+// React imports
+import { useState } from "react";
+
+// Components
+import Modal from "../modal/modal.component";
+import AppSettings from "../app-settings/app-settings.component";
+
 // Styles
 import "./header.styles.scss";
 
 // Logo
 // import logo from "../../assets/logo.png";
 
-const Header = () => {
+const Header = ({ timerSettings, setTimerSettings }) => {
+	// State
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	// Helper functions
+	const openModal = () => setIsModalOpen(true);
+	const closeModal = () => setIsModalOpen(false);
+
 	return (
 		<header className="header">
 			<span className="logo">pomoclock</span>
-			<button className="settings">
+			<button className="settings" onClick={openModal}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -29,6 +45,13 @@ const Header = () => {
 					/>
 				</svg>
 			</button>
+			<Modal isOpen={isModalOpen} onClose={closeModal}>
+				<AppSettings
+					closeModal={closeModal}
+					timerSettings={timerSettings}
+					setTimerSettings={setTimerSettings}
+				/>
+			</Modal>
 		</header>
 	);
 };
