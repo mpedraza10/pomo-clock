@@ -14,8 +14,6 @@ const AppSettings = ({ closeModal, timerSettings, setTimerSettings }) => {
 		let validatedValue = +value;
 		if (validatedValue > 99) {
 			validatedValue = 99;
-		} else if (validatedValue < 1) {
-			validatedValue = 1;
 		}
 
 		setTimerSettings({
@@ -40,8 +38,6 @@ const AppSettings = ({ closeModal, timerSettings, setTimerSettings }) => {
 						<input
 							type="number"
 							step="1"
-							min="1"
-							max="99"
 							name="work"
 							className="timer-setting-input"
 							value={timerSettings.work.minutes}
@@ -53,8 +49,6 @@ const AppSettings = ({ closeModal, timerSettings, setTimerSettings }) => {
 						<input
 							type="number"
 							step="1"
-							min="1"
-							max="99"
 							name="sbreak"
 							className="timer-setting-input"
 							value={timerSettings.sbreak.minutes}
@@ -66,8 +60,6 @@ const AppSettings = ({ closeModal, timerSettings, setTimerSettings }) => {
 						<input
 							type="number"
 							step="1"
-							min="1"
-							max="99"
 							name="lbreak"
 							className="timer-setting-input"
 							value={timerSettings.lbreak.minutes}
