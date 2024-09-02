@@ -9,7 +9,7 @@ import Header from "./components/header/header.component";
 
 // Default timer settings (min * 60 to turn into seconds)
 const TIMER_SETTINGS = {
-	work: { minutes: 30 },
+	work: { minutes: 25 },
 	sbreak: { minutes: 5 },
 	lbreak: { minutes: 15 },
 };
