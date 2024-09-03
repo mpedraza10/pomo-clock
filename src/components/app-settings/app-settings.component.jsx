@@ -1,12 +1,18 @@
 /* eslint-disable react/prop-types */
 
 // React imports
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
+
+// Context
+import { SettingsContext } from "../../contexts/settings.context";
 
 // Styles
 import "./app-settings.styles.scss";
 
-const AppSettings = ({ closeModal, timerSettings, setTimerSettings }) => {
+const AppSettings = ({ closeModal }) => {
+	// State
+	const { timerSettings, setTimerSettings } = useContext(SettingsContext);
+
 	// Helper functions
 	const handleChange = (e) => {
 		const { name, value } = e.target;

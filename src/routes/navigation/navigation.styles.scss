@@ -13,30 +13,42 @@
 	justify-content: space-between;
 	border-bottom: 1px solid #fff;
 	padding: 1rem;
+	z-index: 10;
+
+	&.red-bg {
+		background-color: $red-bg-color;
+	}
 
 	.logo {
 		font-size: 1.3rem;
 		color: #fff;
 	}
 
-	.settings {
-		width: 35px;
-		height: 35px;
-		border: none;
-		background-color: transparent;
+	.nav-options {
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		cursor: pointer;
+		gap: 0.5rem;
 
-		&:hover {
-			background-color: $contrast-red-bg-color;
-		}
+		.settings,
+		.auth,
+		.logout {
+			width: 35px;
+			height: 35px;
+			border: none;
+			background-color: transparent;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
 
-		svg {
-			color: #fff;
-			width: 25px;
-			height: 25px;
+			&:hover {
+				background-color: $contrast-red-bg-color;
+			}
+
+			svg {
+				color: #fff;
+				width: 25px;
+				height: 25px;
+			}
 		}
 	}
 }

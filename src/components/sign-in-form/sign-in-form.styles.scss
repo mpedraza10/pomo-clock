@@ -1,0 +1,31 @@
+.sign-in-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	color: #fff;
+
+	h2 {
+		margin: 10px 0;
+	}
+
+	.buttons-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.sign-in-container {
+		max-width: 382px;
+	}
+}
+
+@media screen and (min-width: 827px) {
+	.sign-in-container {
+		.buttons-container {
+			flex-direction: row;
+			align-items: center;
+		}
+	}
+}
