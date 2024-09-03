@@ -1,94 +1,54 @@
 // React imports
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext } from "react";
 
-// Components
-import Nav from "./components/nav/nav.component";
-import Timer from "./components/timer/timer.component";
-import MotivationText from "./components/motivation-text/motivation-text.component";
-import Header from "./components/header/header.component";
+// React router dom imports
+import { Routes, Route } from "react-router-dom";
 
-// Default timer settings (min * 60 to turn into seconds)
-const TIMER_SETTINGS = {
-	work: { minutes: 25 },
-	sbreak: { minutes: 5 },
-	lbreak: { minutes: 15 },
-};
+// React toastify imports
+import { ToastContainer } from "react-toastify";
+
+// Context
+import { UserContext } from "./contexts/user.context";
+
+// Routes (Components)
+import Navigation from "./routes/navigation/navigation.component";
+import Home from "./routes/home/home.component";
+import Authentication from "./routes/authentication/authentication.component";
+import ProtectedRoute from "./components/protected-route/protected-route.component";
 
 const App = () => {
-	// ---------------------------------------------- State ----------------------------------------------
-	const [timerSettings, setTimerSettings] = useState(TIMER_SETTINGS);
-	const [currentTimer, setCurrentTimer] = useState("work");
-	const [isDone, setIsDone] = useState(false);
-	const [workCount, setWorkCount] = useState(1);
-
-	// ---------------------------------------------- Effects ----------------------------------------------
-
-	// Effect to check if we need to change the timer when it finishes
-	useEffect(() => {
-		// Check if we are done with a timer
-		if (isDone) {
-			// Then check where we need to update the view
-			if (currentTimer === "work" && workCount < 4) {
-				setCurrentTimer("sbreak");
-				setWorkCount(workCount + 1);
-			} else if (currentTimer === "work" && workCount >= 4) {
-				setCurrentTimer("lbreak");
-				setWorkCount(1);
-			} else if (currentTimer === "sbreak" || currentTimer === "lbreak") {
-				setCurrentTimer("work");
-			}
-
-			setIsDone(false);
-		}
-	}, [isDone]);
-
+	const { currentUser } = useContext(UserContext);
 	return (
 		<Fragment>
-			<Header
-				timerSettings={timerSettings}
-				setTimerSettings={setTimerSettings}
+			<Routes>
+				<Route path="/" element={<Navigation />}>
+					<Route index element={<Home />} />
+
+					{/* Protected Routes */}
+					<Route
+						path="auth"
+						element={
+							<ProtectedRoute
+								component={Authentication}
+								condition={!currentUser}
+								redirectTo="/"
+							/>
+						}
+					/>
+				</Route>
+			</Routes>
+			<ToastContainer
+				position="bottom-right"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="light"
 			/>
-			<main
-				className={`main-container ${
-					currentTimer === "work"
-						? "red-bg"
-						: currentTimer === "sbreak"
-						? "light-blue-bg"
-						: "dark-blue-bg"
-				}`}
-			>
-				<div
-					className={`content-container ${
-						currentTimer === "work"
-							? "red-bg"
-							: currentTimer === "sbreak"
-							? "light-blue-bg"
-							: "dark-blue-bg"
-					}`}
-				>
-					<Nav currentTimer={currentTimer} setCurrentTimer={setCurrentTimer} />
-					{currentTimer === "work" ? (
-						<Timer
-							minutes={timerSettings.work.minutes}
-							currentTimer={currentTimer}
-							setIsDone={setIsDone}
-						/>
-					) : currentTimer === "sbreak" ? (
-						<Timer
-							minutes={timerSettings.sbreak.minutes}
-							currentTimer={currentTimer}
-							setIsDone={setIsDone}
-						/>
-					) : (
-						<Timer
-							minutes={timerSettings.lbreak.minutes}
-							currentTimer={currentTimer}
-							setIsDone={setIsDone}
-						/>
-					)}
-				</div>
-				<MotivationText workCount={workCount} currentTimer={currentTimer} />
-			</main>
 		</Fragment>
 	);
 };

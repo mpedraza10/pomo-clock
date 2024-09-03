@@ -1,0 +1,24 @@
+.sign-up-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	color: #fff;
+
+	h2 {
+		margin: 10px 0;
+	}
+
+	button {
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.sign-up-container {
+		max-width: 382px;
+
+		button {
+			width: auto;
+		}
+	}
+}
