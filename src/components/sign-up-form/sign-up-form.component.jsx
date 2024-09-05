@@ -62,7 +62,7 @@ const SignUpForm = () => {
 			);
 
 			// Now create the user in the db passing the display name missing
-			await createUserDocumentFromAuth(user, { displayName });
+			await createUserDocumentFromAuth(user, { displayName, workedMinutes: 0 });
 
 			// Finally we reset the form fields and alert success if everything went as expected
 			resetFormFields();
@@ -70,6 +70,10 @@ const SignUpForm = () => {
 		} catch (error) {
 			if (error.code === "auth/email-already-in-use") {
 				showErrorAlert("Cannot create user, email already in use");
+			} else if (error.code === "auth/weak-password") {
+				showErrorAlert(
+					"Password is weak. Your password should at least be 6 characters."
+				);
 			} else {
 				console.log("User creation encountered an error: ", error);
 			}

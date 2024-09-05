@@ -1,0 +1,27 @@
+@import "../../utils/styles/variables";
+
+.report-page-container {
+	min-height: 100vh;
+	padding: $header-height 1rem 1rem 1rem;
+	width: 100%;
+	background-color: $red-bg-color;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	.no-auth-container {
+		max-width: 400px;
+		text-align: center;
+
+		h2 {
+			color: #fff;
+			margin-bottom: 1rem;
+		}
+
+		a {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+}

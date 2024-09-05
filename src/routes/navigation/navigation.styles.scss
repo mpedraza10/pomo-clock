@@ -22,6 +22,10 @@
 	.logo {
 		font-size: 1.3rem;
 		color: #fff;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 
 	.nav-options {
@@ -30,6 +34,7 @@
 
 		.settings,
 		.auth,
+		.report,
 		.logout {
 			width: 35px;
 			height: 35px;

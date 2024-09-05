@@ -78,6 +78,21 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo) => {
 	return userDocRef;
 };
 
+// Method to get all of the data from a user in the db
+export const getDbUserData = async (userAuth) => {
+	// If we don't get userAuth then don't run the func
+	if (!userAuth) return;
+
+	// First we need to check if there is an existing document
+	// meaining that, in this case, if we already have the user
+	const userDocRef = doc(db, "users", userAuth.uid);
+
+	// Get the snapshot (or data) to see if we actually have data
+	// in the given doc reference
+	const userSnapshot = await getDoc(userDocRef);
+	if (userSnapshot.exists()) return userSnapshot.data();
+};
+
 // Method to sign up user with email and password provider from firebase
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
 	// If we don't get email and password then don't run the func

@@ -30,7 +30,7 @@ export const UserProvider = ({ children }) => {
 		const unsuscribe = onAuthStateChangedListener((user) => {
 			// If we got a user we call the method to create the user in out db
 			if (user) {
-				createUserDocumentFromAuth(user);
+				createUserDocumentFromAuth(user, { workedMinutes: 0 });
 			}
 			setCurrentUser(user);
 		});
