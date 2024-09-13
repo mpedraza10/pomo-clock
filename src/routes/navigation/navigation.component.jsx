@@ -32,7 +32,12 @@ const Navigation = () => {
 
 	return (
 		<Fragment>
-			<header className={`header ${location.pathname === "/auth" && "red-bg"}`}>
+			<header
+				className={`header ${
+					location.pathname === "/auth" ||
+					(location.pathname === "/report" && "red-bg")
+				}`}
+			>
 				<Link className="logo" to="/">
 					pomoclock
 				</Link>

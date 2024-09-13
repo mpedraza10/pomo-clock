@@ -71,6 +71,9 @@ const SignInForm = () => {
 				showErrorAlert("Incorrect password, try again.");
 			} else {
 				console.log(error);
+				showErrorAlert(
+					"Something went wrong on our side. Please try again later."
+				);
 			}
 		}
 	};

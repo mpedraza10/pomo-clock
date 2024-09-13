@@ -62,7 +62,7 @@ const SignUpForm = () => {
 			);
 
 			// Now create the user in the db passing the display name missing
-			await createUserDocumentFromAuth(user, { displayName, workedMinutes: 0 });
+			await createUserDocumentFromAuth(user, { displayName });
 
 			// Finally we reset the form fields and alert success if everything went as expected
 			resetFormFields();
