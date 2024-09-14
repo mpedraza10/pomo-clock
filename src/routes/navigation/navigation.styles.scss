@@ -17,6 +17,17 @@
 
 	&.red-bg {
 		background-color: $red-bg-color;
+
+		.nav-options {
+			.settings,
+			.auth,
+			.report,
+			.logout {
+				&:hover {
+					background-color: $contrast-red-bg-color;
+				}
+			}
+		}
 	}
 
 	.logo {
@@ -32,6 +43,38 @@
 		display: flex;
 		gap: 0.5rem;
 
+		&.work {
+			.settings,
+			.auth,
+			.report,
+			.logout {
+				&:hover {
+					background-color: $contrast-red-bg-color;
+				}
+			}
+		}
+
+		&.sbreak {
+			.settings,
+			.auth,
+			.report,
+			.logout {
+				&:hover {
+					background-color: $contrast-light-blue-bg-color;
+				}
+			}
+		}
+		&.lbreak {
+			.settings,
+			.auth,
+			.report,
+			.logout {
+				&:hover {
+					background-color: $contrast-dark-blue-bg-color;
+				}
+			}
+		}
+
 		.settings,
 		.auth,
 		.report,
@@ -44,10 +87,6 @@
 			justify-content: center;
 			align-items: center;
 			cursor: pointer;
-
-			&:hover {
-				background-color: $contrast-red-bg-color;
-			}
 
 			svg {
 				color: #fff;

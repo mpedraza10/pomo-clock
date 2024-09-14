@@ -26,10 +26,20 @@ export const showErrorAlert = (errorMessage) =>
 		theme: "light",
 	});
 
-export const getTodaysDate = () => new Date().toISOString().slice(0, 10);
+export const getTodaysDate = () => {
+	const date = new Date();
+	return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+		.toISOString()
+		.slice(0, 10);
+};
 
 // Converte new Date() obj to formatted string date -> "YYYY-MM-DD"
-export const convertDateToString = (date) => date.toISOString().slice(0, 10);
+export const convertDateToString = (date) => {
+	const offsetDate = new Date(
+		date.getTime() - date.getTimezoneOffset() * 60000
+	);
+	return offsetDate.toISOString().slice(0, 10);
+};
 
 export const getStartAndLastDayOfCurrentWeek = () => {
 	const curr = new Date(); // Get current date

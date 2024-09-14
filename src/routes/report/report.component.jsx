@@ -57,7 +57,10 @@ const Report = () => {
 				}
 
 				const tdata = data.find((data) => data.date === todaysDate);
-				setTodaysData({ ...tdata, sumOfWorkedHoursInWeek });
+				setTodaysData({
+					...tdata,
+					sumOfWorkedHoursInWeek: sumOfWorkedHoursInWeek.toFixed(2),
+				});
 			}
 		};
 
@@ -78,11 +81,14 @@ const Report = () => {
 								(todaysData.workedHours < 1
 									? `${todaysData.workedMinutes} minutes`
 									: `${todaysData.workedHours} ${
-											todaysData.workedHours === 1.0 ? "hour" : "hours"
+											todaysData.workedHours <= 1.0 ? "hour" : "hours"
 									  }`)}
 							! And this week you&apos;ve worked{" "}
-							{todaysData && `${todaysData.sumOfWorkedHoursInWeek} hours`}!
-							Every minute brings you closer to your goals. Keep up the
+							{todaysData &&
+								`${todaysData.sumOfWorkedHoursInWeek} ${
+									todaysData.sumOfWorkedHoursInWeek <= 1 ? "hour" : "hours"
+								}`}
+							! Every minute brings you closer to your goals. Keep up the
 							fantastic effort, you&apos;ve got this!
 						</p>
 					</div>

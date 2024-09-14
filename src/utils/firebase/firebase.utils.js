@@ -22,6 +22,7 @@ import {
 	query,
 	where,
 	getDocs,
+	updateDoc,
 } from "firebase/firestore";
 
 // Constant utils imports
@@ -97,6 +98,7 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo) => {
 			const dateId = getTodaysDate();
 
 			await setDoc(doc(db, "users", userAuth.uid, "reports", dateId), {
+				date: dateId,
 				workedMinutes: 0,
 				streak: 1,
 				accessedAt: createdAt,
@@ -153,6 +155,53 @@ export const onAuthStateChangedListener = (callback) =>
 	onAuthStateChanged(auth, callback);
 
 // ---------------------------------------- Reports methods ----------------------------------------
+
+// Method to save workedMinutes for user
+export const updateElapsedTimeInFirebase = async (userAuth, elapsedTime) => {
+	// If we don't get userAuth then don't run the func
+	if (!userAuth) return;
+
+	// First we need to check if there is an existing document
+	// meaining that, in this case, if we already have a user report
+	const reportDocRef = doc(
+		db,
+		"users",
+		userAuth.uid,
+		"reports",
+		getTodaysDate()
+	);
+
+	// Get the snapshot (or data) to see if we actually have data
+	// in the given doc reference
+	const reportSnapshot = await getDoc(reportDocRef);
+	if (!reportSnapshot.exists()) {
+		try {
+			// Set the created date into a string
+			const dateId = getTodaysDate();
+
+			await setDoc(doc(db, "users", userAuth.uid, "reports", dateId), {
+				date: dateId,
+				workedMinutes: elapsedTime,
+				streak: 1,
+				accessedAt: new Date(),
+			});
+		} catch (error) {
+			console.log("Error saving the worked minutes", error);
+		}
+	} else {
+		// Get the current data
+		const currentData = reportSnapshot.data();
+
+		// New data
+		const updatedData = {
+			...currentData,
+			workedMinutes: elapsedTime,
+		};
+
+		// Update the doc with the modified data
+		await updateDoc(reportDocRef, updatedData);
+	}
+};
 
 // Method to get all of the data from a user in the db
 export const getUserReportData = async (userAuth) => {
@@ -218,7 +267,7 @@ export const getThisWeekUserReportData = async (userAuth) => {
 	result = result.map((data) => ({
 		...data,
 		day: getDay(data.date),
-		workedHours: parseFloat((data.workedMinutes / 60).toFixed(1)),
+		workedHours: parseFloat((data.workedMinutes / 60).toFixed(2)),
 	}));
 	return result;
 };

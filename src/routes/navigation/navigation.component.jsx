@@ -23,7 +23,7 @@ import "./navigation.styles.scss";
 const Navigation = () => {
 	// State
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const { currentUser } = useContext(UserContext);
+	const { currentUser, currentTimer } = useContext(UserContext);
 	const location = useLocation();
 
 	// Helper functions
@@ -41,7 +41,17 @@ const Navigation = () => {
 				<Link className="logo" to="/">
 					pomoclock
 				</Link>
-				<div className="nav-options">
+				<div
+					className={`nav-options ${
+						location.pathname === "/" && currentTimer === "work"
+							? "work"
+							: location.pathname === "/" && currentTimer === "sbreak"
+							? "sbreak"
+							: location.pathname === "/" && currentTimer === "lbreak"
+							? "lbreak"
+							: ""
+					}`}
+				>
 					{currentUser ? (
 						<span className="logout" onClick={signOutUser}>
 							<svg

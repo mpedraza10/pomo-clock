@@ -15,8 +15,10 @@ import {
 export const UserContext = createContext({
 	currentUser: null,
 	currentUserData: null,
+	currentTimer: "work",
 	setCurrentUser: () => null,
 	setCurrentUserData: () => null,
+	setCurrentTimer: () => null,
 });
 
 // Provider (actual component that wraps components that can access this context)
@@ -24,7 +26,8 @@ export const UserProvider = ({ children }) => {
 	// State
 	const [currentUser, setCurrentUser] = useState(null);
 	const [currentUserData, setCurrentUserData] = useState(null);
-	const value = { currentUser, currentUserData };
+	const [currentTimer, setCurrentTimer] = useState("work");
+	const value = { currentUser, currentUserData, currentTimer, setCurrentTimer };
 
 	// Effects
 
