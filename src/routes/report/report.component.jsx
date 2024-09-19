@@ -48,18 +48,22 @@ const Report = () => {
 			if (data && data.length) {
 				// Get the sum of all hours worked in the week until today
 				let sumOfWorkedHoursInWeek = 0;
+				let sumOfWorkedMinutesInWeek = 0;
 				for (let entry of data) {
 					if (entry.date === todaysDate) {
 						sumOfWorkedHoursInWeek += entry.workedHours;
+						sumOfWorkedMinutesInWeek += entry.workedMinutes;
 						break;
 					}
 					sumOfWorkedHoursInWeek += entry.workedHours;
+					sumOfWorkedMinutesInWeek += entry.workedMinutes;
 				}
 
 				const tdata = data.find((data) => data.date === todaysDate);
 				setTodaysData({
 					...tdata,
 					sumOfWorkedHoursInWeek: sumOfWorkedHoursInWeek.toFixed(2),
+					sumOfWorkedMinutesInWeek: sumOfWorkedMinutesInWeek.toFixed(2),
 				});
 			}
 		};
@@ -85,8 +89,18 @@ const Report = () => {
 									  }`)}
 							! And this week you&apos;ve worked{" "}
 							{todaysData &&
-								`${todaysData.sumOfWorkedHoursInWeek} ${
-									todaysData.sumOfWorkedHoursInWeek <= 1 ? "hour" : "hours"
+								`${
+									todaysData.sumOfWorkedHoursInWeek < 1
+										? todaysData.sumOfWorkedMinutesInWeek
+										: todaysData.sumOfWorkedHoursInWeek
+								} ${
+									todaysData.sumOfWorkedHoursInWeek < 1
+										? todaysData.sumOfWorkedMinutesInWeek <= 1
+											? "minute"
+											: "minutes"
+										: todaysData.sumOfWorkedHoursInWeek <= 1
+										? "hour"
+										: "hours"
 								}`}
 							! Every minute brings you closer to your goals. Keep up the
 							fantastic effort, you&apos;ve got this!
