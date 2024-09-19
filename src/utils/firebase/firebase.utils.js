@@ -195,7 +195,7 @@ export const updateElapsedTimeInFirebase = async (userAuth, elapsedTime) => {
 		// New data
 		const updatedData = {
 			...currentData,
-			workedMinutes: elapsedTime,
+			workedMinutes: (currentData.workedMinutes += elapsedTime),
 		};
 
 		// Update the doc with the modified data

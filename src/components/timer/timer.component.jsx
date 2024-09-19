@@ -26,6 +26,7 @@ const Timer = ({ minutes, setIsDone }) => {
 	const [isRunning, setIsRunning] = useState(false);
 	const [startTime, setStartTime] = useState(null); // Track when the timer started
 	const [timeLeft, setTimeLeft] = useState(pomodoroDuration); // Time remaining
+	const [prevTimeElapsed, setPrevTimeElapsed] = useState(0);
 
 	// Create a ref for the audio element
 	// Create refs for the audio elements
@@ -67,8 +68,15 @@ const Timer = ({ minutes, setIsDone }) => {
 	};
 
 	// Function to save elapsed time in Firebase
-	const saveElapsedTime = async (elapsedTime) =>
-		await updateElapsedTimeInFirebase(currentUser, elapsedTime);
+	const saveElapsedTime = async (elapsedTime) => {
+		console.log(`Elapsed: ${elapsedTime} minus the prev: ${prevTimeElapsed}`);
+		const correctElapsedTime = elapsedTime - prevTimeElapsed;
+		console.log("Correct: ", correctElapsedTime);
+		setPrevTimeElapsed((prev) => (prev += correctElapsedTime));
+		await updateElapsedTimeInFirebase(currentUser, correctElapsedTime);
+	};
+
+	useEffect(() => console.log("Prev: ", prevTimeElapsed), [prevTimeElapsed]);
 
 	// ---------------------------------------------- Effects ----------------------------------------------
 	useEffect(() => {
@@ -114,7 +122,10 @@ const Timer = ({ minutes, setIsDone }) => {
 				await saveElapsedTime(elapsedTime);
 			}
 		};
+
 		storeElapsedTime();
+
+		if (!isRunning && timeLeft === pomodoroDuration) setPrevTimeElapsed(0);
 	}, [isRunning]);
 
 	return (
