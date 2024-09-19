@@ -69,14 +69,10 @@ const Timer = ({ minutes, setIsDone }) => {
 
 	// Function to save elapsed time in Firebase
 	const saveElapsedTime = async (elapsedTime) => {
-		console.log(`Elapsed: ${elapsedTime} minus the prev: ${prevTimeElapsed}`);
 		const correctElapsedTime = elapsedTime - prevTimeElapsed;
-		console.log("Correct: ", correctElapsedTime);
 		setPrevTimeElapsed((prev) => (prev += correctElapsedTime));
 		await updateElapsedTimeInFirebase(currentUser, correctElapsedTime);
 	};
-
-	useEffect(() => console.log("Prev: ", prevTimeElapsed), [prevTimeElapsed]);
 
 	// ---------------------------------------------- Effects ----------------------------------------------
 	useEffect(() => {
