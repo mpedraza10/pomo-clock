@@ -2,7 +2,13 @@
 /* eslint-disable react/prop-types */
 
 // React imports
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+
+// Context
+import { UserContext } from "../../contexts/user.context";
+
+// Firebase utils
+import { updateElapsedTimeInFirebase } from "../../utils/firebase/firebase.utils";
 
 // Components
 import Controls from "../controls/controls.component";
@@ -10,13 +16,17 @@ import Controls from "../controls/controls.component";
 // Styles
 import "./timer.styles.scss";
 
-const Timer = ({ minutes, currentTimer, setIsDone }) => {
+const Timer = ({ minutes, setIsDone }) => {
+	// Get currentUser if we have
+	const { currentUser, currentTimer } = useContext(UserContext);
+
 	// Define initial duration of a Pomodoro session (in milliseconds)
 	const pomodoroDuration = minutes * 60 * 1000;
 
 	const [isRunning, setIsRunning] = useState(false);
 	const [startTime, setStartTime] = useState(null); // Track when the timer started
 	const [timeLeft, setTimeLeft] = useState(pomodoroDuration); // Time remaining
+	const [prevTimeElapsed, setPrevTimeElapsed] = useState(0);
 
 	// Create a ref for the audio element
 	// Create refs for the audio elements
@@ -48,6 +58,20 @@ const Timer = ({ minutes, currentTimer, setIsDone }) => {
 		return `${minutes.toString().padStart(2, "0")}:${seconds
 			.toString()
 			.padStart(2, "0")}`;
+	};
+
+	// Funtion that returns elapsed time in minutes
+	const getWorkedMinutes = (milliseconds) => {
+		const totalSeconds = Math.floor(milliseconds / 1000);
+		const minutes = totalSeconds / 60;
+		return minutes;
+	};
+
+	// Function to save elapsed time in Firebase
+	const saveElapsedTime = async (elapsedTime) => {
+		const correctElapsedTime = elapsedTime - prevTimeElapsed;
+		setPrevTimeElapsed((prev) => (prev += correctElapsedTime));
+		await updateElapsedTimeInFirebase(currentUser, correctElapsedTime);
 	};
 
 	// ---------------------------------------------- Effects ----------------------------------------------
@@ -82,6 +106,23 @@ const Timer = ({ minutes, currentTimer, setIsDone }) => {
 
 		return () => clearInterval(timerId); // Cleanup interval on component unmount or timer stop
 	}, [isRunning, timeLeft]);
+
+	// Save elapsed time on pause or stop
+	useEffect(() => {
+		const storeElapsedTime = async () => {
+			if (!isRunning && startTime && currentTimer === "work" && currentUser) {
+				// Calculate the elapsed time since the timer was last started
+				const elapsedTime = getWorkedMinutes(Date.now() - startTime);
+
+				// Save the total elapsed time to Firebase
+				await saveElapsedTime(elapsedTime);
+			}
+		};
+
+		storeElapsedTime();
+
+		if (!isRunning && timeLeft === pomodoroDuration) setPrevTimeElapsed(0);
+	}, [isRunning]);
 
 	return (
 		<div className="timer-container">

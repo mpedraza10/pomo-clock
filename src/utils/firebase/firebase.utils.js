@@ -13,7 +13,26 @@ import {
 } from "firebase/auth";
 
 // Firebase firestore (db) imports
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+	getFirestore,
+	doc,
+	getDoc,
+	setDoc,
+	collection,
+	query,
+	where,
+	getDocs,
+	updateDoc,
+} from "firebase/firestore";
+
+// Constant utils imports
+import {
+	getTodaysDate,
+	convertDateToString,
+	getStartAndLastDayOfCurrentWeek,
+	generateDateRange,
+	getDay,
+} from "../constants";
 
 // Firebase config
 const firebaseConfig = {
@@ -61,6 +80,7 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo) => {
 		const { displayName, email } = userAuth;
 		const createdAt = new Date();
 
+		// Set the user data
 		try {
 			await setDoc(userDocRef, {
 				displayName: displayName,
@@ -71,11 +91,41 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo) => {
 		} catch (error) {
 			console.log("Error creating the user", error.message);
 		}
+
+		// Now we set the report subcollection data for the user in the db
+		try {
+			// Set the created date into a string
+			const dateId = getTodaysDate();
+
+			await setDoc(doc(db, "users", userAuth.uid, "reports", dateId), {
+				date: dateId,
+				workedMinutes: 0,
+				streak: 1,
+				accessedAt: createdAt,
+			});
+		} catch (error) {
+			console.log("Error creating report data for the user", error.message);
+		}
 	}
 
 	// If the user exists or after we create the user we return
 	// the user ref
 	return userDocRef;
+};
+
+// Method to get all of the data from a user in the db
+export const getDbUserData = async (userAuth) => {
+	// If we don't get userAuth then don't run the func
+	if (!userAuth) return;
+
+	// First we need to check if there is an existing document
+	// meaining that, in this case, if we already have the user
+	const userDocRef = doc(db, "users", userAuth.uid);
+
+	// Get the snapshot (or data) to see if we actually have data
+	// in the given doc reference
+	const userSnapshot = await getDoc(userDocRef);
+	if (userSnapshot.exists()) return userSnapshot.data();
 };
 
 // Method to sign up user with email and password provider from firebase
@@ -104,4 +154,120 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) =>
 	onAuthStateChanged(auth, callback);
 
-// ---------------------------------------- CRUD Methods ----------------------------------------
+// ---------------------------------------- Reports methods ----------------------------------------
+
+// Method to save workedMinutes for user
+export const updateElapsedTimeInFirebase = async (userAuth, elapsedTime) => {
+	// If we don't get userAuth then don't run the func
+	if (!userAuth) return;
+
+	// First we need to check if there is an existing document
+	// meaining that, in this case, if we already have a user report
+	const reportDocRef = doc(
+		db,
+		"users",
+		userAuth.uid,
+		"reports",
+		getTodaysDate()
+	);
+
+	// Get the snapshot (or data) to see if we actually have data
+	// in the given doc reference
+	const reportSnapshot = await getDoc(reportDocRef);
+	if (!reportSnapshot.exists()) {
+		try {
+			// Set the created date into a string
+			const dateId = getTodaysDate();
+
+			await setDoc(doc(db, "users", userAuth.uid, "reports", dateId), {
+				date: dateId,
+				workedMinutes: elapsedTime,
+				streak: 1,
+				accessedAt: new Date(),
+			});
+		} catch (error) {
+			console.log("Error saving the worked minutes", error);
+		}
+	} else {
+		// Get the current data
+		const currentData = reportSnapshot.data();
+
+		// New data
+		const updatedData = {
+			...currentData,
+			workedMinutes: (currentData.workedMinutes += elapsedTime),
+		};
+
+		// Update the doc with the modified data
+		await updateDoc(reportDocRef, updatedData);
+	}
+};
+
+// Method to get all of the data from a user in the db
+export const getUserReportData = async (userAuth) => {
+	// If we don't get userAuth then don't run the func
+	if (!userAuth) return;
+
+	// First we need to check if there is an existing document
+	// meaining that, in this case, if we already have a user report
+	const reportDocRef = doc(
+		db,
+		"users",
+		userAuth.uid,
+		"reports",
+		getTodaysDate()
+	);
+
+	// Get the snapshot (or data) to see if we actually have data
+	// in the given doc reference
+	const reportSnapshot = await getDoc(reportDocRef);
+	if (reportSnapshot.exists()) return reportSnapshot.data();
+};
+
+export const getThisWeekUserReportData = async (userAuth) => {
+	// If we don't get userAuth then don't run the func
+	if (!userAuth) return;
+
+	const [firstDay, lastDay] = getStartAndLastDayOfCurrentWeek();
+	const firstDateStr = convertDateToString(firstDay);
+	const lastDateStr = convertDateToString(lastDay);
+
+	// Get the collection
+	const reportsRef = collection(db, `users/${userAuth.uid}/reports`);
+
+	// Create the query
+	const q = query(
+		reportsRef,
+		where("__name__", ">=", firstDateStr),
+		where("__name__", "<=", lastDateStr)
+	);
+
+	// Now we can use getDocs passing the q which returns a query snapshot
+	const querySnapshot = await getDocs(q);
+
+	const reportData = querySnapshot.docs.reduce((acc, docSnapshot) => {
+		acc[docSnapshot.data().date] = docSnapshot.data();
+		return acc;
+	}, {});
+
+	// Generate a list of all dates in the range
+	const allDates = generateDateRange(firstDay, lastDay);
+
+	// Construct the result object with each date
+	let result = new Array(allDates.length);
+	allDates.forEach((date, index) => {
+		const dateString = convertDateToString(date);
+		result[index] = reportData[dateString] || {
+			workedMinutes: 0,
+			date: dateString,
+		};
+	});
+
+	// Add the day and worked minutes in hours in for the report
+	result = result.map((data) => ({
+		...data,
+		day: getDay(data.date),
+		workedHours: parseFloat((data.workedMinutes / 60).toFixed(2)),
+	}));
+	return result;
+};

@@ -1,9 +1,18 @@
 /* eslint-disable react/prop-types */
 
+// React imports
+import { useContext } from "react";
+
+// Context
+import { UserContext } from "../../contexts/user.context";
+
 // Styles
 import "./motivation-text.styles.scss";
 
-const MotivationText = ({ workCount, currentTimer }) => {
+const MotivationText = ({ workCount }) => {
+	// State
+	const { currentTimer } = useContext(UserContext);
+
 	return (
 		<div className="motivation-text-container">
 			{currentTimer === "work" && (

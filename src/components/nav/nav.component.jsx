@@ -1,9 +1,16 @@
-/* eslint-disable react/prop-types */
+// React imports
+import { useContext } from "react";
+
+// Context
+import { UserContext } from "../../contexts/user.context";
 
 // Styles
 import "./nav.styles.scss";
 
-const Nav = ({ currentTimer, setCurrentTimer }) => {
+const Nav = () => {
+	// State
+	const { currentTimer, setCurrentTimer } = useContext(UserContext);
+
 	// Helper functions
 	const handleTimerSelection = (e) => setCurrentTimer(e.target.value);
 

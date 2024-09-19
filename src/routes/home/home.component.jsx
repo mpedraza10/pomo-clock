@@ -3,6 +3,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 
 // Context
 import { SettingsContext } from "../../contexts/settings.context";
+import { UserContext } from "../../contexts/user.context";
 
 // Components
 import Nav from "../../components/nav/nav.component";
@@ -11,10 +12,10 @@ import MotivationText from "../../components/motivation-text/motivation-text.com
 
 const Home = () => {
 	// ---------------------------------------------- State ----------------------------------------------
-	const [currentTimer, setCurrentTimer] = useState("work");
 	const [isDone, setIsDone] = useState(false);
 	const [workCount, setWorkCount] = useState(1);
 
+	const { currentTimer, setCurrentTimer } = useContext(UserContext);
 	const { timerSettings } = useContext(SettingsContext);
 
 	// ---------------------------------------------- Effects ----------------------------------------------
@@ -58,28 +59,22 @@ const Home = () => {
 							: "dark-blue-bg"
 					}`}
 				>
-					<Nav currentTimer={currentTimer} setCurrentTimer={setCurrentTimer} />
+					<Nav />
 					{currentTimer === "work" ? (
-						<Timer
-							minutes={timerSettings.work.minutes}
-							currentTimer={currentTimer}
-							setIsDone={setIsDone}
-						/>
+						<Timer minutes={timerSettings.work.minutes} setIsDone={setIsDone} />
 					) : currentTimer === "sbreak" ? (
 						<Timer
 							minutes={timerSettings.sbreak.minutes}
-							currentTimer={currentTimer}
 							setIsDone={setIsDone}
 						/>
 					) : (
 						<Timer
 							minutes={timerSettings.lbreak.minutes}
-							currentTimer={currentTimer}
 							setIsDone={setIsDone}
 						/>
 					)}
 				</div>
-				<MotivationText workCount={workCount} currentTimer={currentTimer} />
+				<MotivationText workCount={workCount} />
 			</main>
 		</Fragment>
 	);
