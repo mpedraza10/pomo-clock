@@ -28,6 +28,7 @@ import { getTodaysDate } from "../../utils/constants";
 
 // Components
 import Button from "../../components/button/button.component";
+import ReportDataList from "../../components/report-data-list/report-data-list.component";
 
 // Styles
 import "./report.styles.scss";
@@ -62,8 +63,8 @@ const Report = () => {
 				const tdata = data.find((data) => data.date === todaysDate);
 				setTodaysData({
 					...tdata,
-					sumOfWorkedHoursInWeek: sumOfWorkedHoursInWeek.toFixed(2),
-					sumOfWorkedMinutesInWeek: sumOfWorkedMinutesInWeek.toFixed(2),
+					sumOfWorkedHoursInWeek: Math.floor(sumOfWorkedHoursInWeek),
+					sumOfWorkedMinutesInWeek: Math.floor(sumOfWorkedMinutesInWeek),
 				});
 			}
 		};
@@ -79,32 +80,7 @@ const Report = () => {
 						<h2>
 							Welcome back, {currentUserData && currentUserData.displayName}!
 						</h2>
-						<p>
-							Today you&apos;ve worked{" "}
-							{todaysData &&
-								(todaysData.workedHours < 1
-									? `${todaysData.workedMinutes} minutes`
-									: `${todaysData.workedHours} ${
-											todaysData.workedHours <= 1.0 ? "hour" : "hours"
-									  }`)}
-							! And this week you&apos;ve worked{" "}
-							{todaysData &&
-								`${
-									todaysData.sumOfWorkedHoursInWeek < 1
-										? todaysData.sumOfWorkedMinutesInWeek
-										: todaysData.sumOfWorkedHoursInWeek
-								} ${
-									todaysData.sumOfWorkedHoursInWeek < 1
-										? todaysData.sumOfWorkedMinutesInWeek <= 1
-											? "minute"
-											: "minutes"
-										: todaysData.sumOfWorkedHoursInWeek <= 1
-										? "hour"
-										: "hours"
-								}`}
-							! Every minute brings you closer to your goals. Keep up the
-							fantastic effort, you&apos;ve got this!
-						</p>
+						<ReportDataList todaysData={todaysData} />
 					</div>
 					<div className="charts-container">
 						<ResponsiveContainer width="100%" height="100%">

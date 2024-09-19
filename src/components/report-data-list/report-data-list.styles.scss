@@ -1,0 +1,14 @@
+.report-data-list {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1rem;
+	margin: 2rem 0;
+}
+
+@media screen and (min-width: 768px) {
+	.report-data-list {
+		grid-template-columns: 1fr 1fr;
+		justify-items: center;
+	}
+}
