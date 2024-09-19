@@ -38,6 +38,10 @@ const SignInForm = () => {
 	// Function to handle google sign in
 	const signInWithGoogle = async () => {
 		await signInWithGooglePopup();
+
+		// Finally we reset the form fields and alert success if everything went as expected
+		resetFormFields();
+		showSuccessAlert("Welcome back!");
 	};
 
 	// Function to handle input change depending on the name of
@@ -67,6 +71,9 @@ const SignInForm = () => {
 				showErrorAlert("Incorrect password, try again.");
 			} else {
 				console.log(error);
+				showErrorAlert(
+					"Something went wrong on our side. Please try again later."
+				);
 			}
 		}
 	};
