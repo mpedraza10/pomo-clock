@@ -15,7 +15,7 @@ import Navigation from "./routes/navigation/navigation.component";
 import Home from "./routes/home/home.component";
 import Authentication from "./routes/authentication/authentication.component";
 import Report from "./routes/report/report.component";
-import ProtectedRoute from "./components/protected-route/protected-route.component";
+import PrivateRoute from "./components/private-route/private-route.component";
 
 const App = () => {
 	const { currentUser } = useContext(UserContext);
@@ -28,15 +28,10 @@ const App = () => {
 
 					{/* Protected Routes */}
 					<Route
-						path="auth"
-						element={
-							<ProtectedRoute
-								component={Authentication}
-								condition={!currentUser}
-								redirectTo="/"
-							/>
-						}
-					/>
+						element={<PrivateRoute condition={!currentUser} redirectTo="/" />}
+					>
+						<Route path="auth" element={<Authentication />} />
+					</Route>
 				</Route>
 			</Routes>
 			<ToastContainer

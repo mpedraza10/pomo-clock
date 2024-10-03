@@ -49,11 +49,11 @@ export const getStartAndLastDayOfCurrentWeek = () => {
 	const diffToMonday = day === 0 ? -6 : 1 - day; // Sunday (0) needs to go back 6 days to Monday, otherwise subtract the day of the week from 1
 
 	// Calculate the first and last days of the week (Monday to Sunday)
-	const first = curr.getDate() + diffToMonday;
-	const last = first + 6;
+	const firstDay = new Date(curr);
+	firstDay.setDate(curr.getDate() + diffToMonday);
 
-	const firstDay = new Date(curr.setDate(first));
-	const lastDay = new Date(curr.setDate(last));
+	const lastDay = new Date(firstDay);
+	lastDay.setDate(firstDay.getDate() + 6);
 
 	return [firstDay, lastDay];
 };
