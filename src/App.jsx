@@ -15,7 +15,7 @@ import Navigation from "./routes/navigation/navigation.component";
 import Home from "./routes/home/home.component";
 import Authentication from "./routes/authentication/authentication.component";
 import Report from "./routes/report/report.component";
-import PrivateRoute from "./components/private-route/private-route.component";
+import PublicRoute from "./components/public-route/public-route.component";
 
 const App = () => {
 	const { currentUser } = useContext(UserContext);
@@ -23,12 +23,13 @@ const App = () => {
 		<Fragment>
 			<Routes>
 				<Route path="/" element={<Navigation />}>
+					{/* Unrestricted Routes */}
 					<Route index element={<Home />} />
 					<Route path="report" element={<Report />} />
 
-					{/* Protected Routes */}
+					{/* Public Routes (only available if NOT authenticated) */}
 					<Route
-						element={<PrivateRoute condition={!currentUser} redirectTo="/" />}
+						element={<PublicRoute condition={!!currentUser} redirectTo="/" />}
 					>
 						<Route path="auth" element={<Authentication />} />
 					</Route>
